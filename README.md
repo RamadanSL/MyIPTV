@@ -255,7 +255,7 @@ OK: no hardcoded public playlist registry entries and no playlist-backed wanted 
 
 ### Лицензия
 
-Автор: SLIKK.
+Автор: SLIKK - публичный никнейм автора проекта. GitHub-профиль: [@RamadanSL](https://github.com/RamadanSL).
 
 Проект распространяется свободно по MIT License. Можно использовать, копировать, форкать, менять, распространять и встраивать как угодно. Код предоставляется как есть, без гарантий.
 
@@ -516,7 +516,7 @@ Do not commit:
 
 ## License
 
-Author: SLIKK.
+Author: SLIKK - the author's public nickname. GitHub profile: [@RamadanSL](https://github.com/RamadanSL).
 
 This project is freely available under the MIT License. You may use, copy, fork, modify, distribute, and integrate it however you want. The code is provided as is, without warranty.
 
