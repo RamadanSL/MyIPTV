@@ -1,0 +1,36 @@
+{
+  "channels": {
+    "channel_id_here": {
+      "mode": "static",
+      "url": "https://video.example.com/live/manifest.mpd",
+      "headers": {
+        "Referer": "https://video.example.com/",
+        "X-Playback-Token": "token-value"
+      },
+      "drm_system": "com.widevine.alpha",
+      "license_url": "https://license.example.com/widevine",
+      "license_headers": {
+        "Authorization": "Bearer token-value"
+      },
+      "ttl": 600
+    },
+    "dynamic_channel_id_here": {
+      "mode": "http",
+      "endpoint": "https://api.example.com/resolve?id=dynamic_channel_id_here",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer account-token"
+      },
+      "json_path": "stream.url",
+      "stream_headers": {
+        "Referer": "https://video.example.com/"
+      },
+      "drm_system": "com.widevine.alpha",
+      "license_url": "https://license.example.com/widevine",
+      "license_headers": {
+        "Authorization": "Bearer account-token"
+      },
+      "ttl": 300
+    }
+  }
+}
