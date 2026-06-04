@@ -8,6 +8,14 @@ MyIPTV - небольшой личный IPTV-кабинет на чистом P
 
 Проект специально сделан локальным и аккуратным: без встроенного публичного реестра IPTV, без скрытого автозасева плейлистов и без обязательной внешней базы данных. Все рабочие данные создаются локально в `data/`.
 
+### Статус и авторство
+
+Автор проекта: SLIKK - публичный никнейм автора. GitHub-профиль: [@RamadanSL](https://github.com/RamadanSL).
+
+Проект создавался как личный экспериментальный инструмент. Часть кода написана автором вручную, часть подготовлена, переработана и документирована при активной помощи AI-инструментов. Итоговая логика, требования, проверки и решения по проекту курировались автором.
+
+Проект может содержать недоделанные, спорные или экспериментальные части. Он распространяется как есть, без гарантий работоспособности, пригодности для конкретной задачи или поддержки. Используй, форкай, меняй и дорабатывай свободно.
+
 ### Что умеет
 
 - Добавляет прямую M3U/M3U8-ссылку и парсит именно эту ссылку.
@@ -268,6 +276,14 @@ OK: no hardcoded public playlist registry entries and no playlist-backed wanted 
 MyIPTV is a small personal IPTV dashboard written in plain PHP. It reads user-provided M3U/M3U8 playlists, stores channels in SQLite, checks stream health, and gives a browser player with HLS, DASH, and configurable protected-stream metadata.
 
 The project is intentionally local-first: no bundled public IPTV registry, no hidden playlist seeding, and no database required beyond the SQLite file created in `data/`.
+
+## Status And Authorship
+
+Author: SLIKK - the author's public nickname. GitHub profile: [@RamadanSL](https://github.com/RamadanSL).
+
+This project was built as a personal experimental tool. Some code was written manually by the author, and some parts were generated, reworked, and documented with active help from AI tools. The final direction, requirements, checks, and project decisions were guided by the author.
+
+The project may contain unfinished, rough, or experimental parts. It is distributed as is, without any warranty of functionality, fitness for a particular purpose, or support. Use, fork, modify, and improve it freely.
 
 ## What It Does
 
