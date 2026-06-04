@@ -1,0 +1,14 @@
+data/*
+!data/.gitkeep
+
+*.log
+*.tmp
+*.zip
+.env
+.env.*
+
+vendor/
+node_modules/
+
+.idea/
+.vscode/
