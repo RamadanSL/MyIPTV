@@ -255,6 +255,8 @@ OK: no hardcoded public playlist registry entries and no playlist-backed wanted 
 
 ### Лицензия
 
+Автор: SLIKK.
+
 Проект распространяется свободно по MIT License. Можно использовать, копировать, форкать, менять, распространять и встраивать как угодно. Код предоставляется как есть, без гарантий.
 
 Полный текст лицензии: `LICENSE`.
@@ -513,6 +515,8 @@ Do not commit:
 - screenshots or local caches
 
 ## License
+
+Author: SLIKK.
 
 This project is freely available under the MIT License. You may use, copy, fork, modify, distribute, and integrate it however you want. The code is provided as is, without warranty.
 
