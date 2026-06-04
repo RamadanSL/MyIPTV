@@ -1,5 +1,266 @@
 # MyIPTV
 
+Русская версия находится первой. English version follows below.
+
+## Русский
+
+MyIPTV - небольшой личный IPTV-кабинет на чистом PHP. Он читает пользовательские M3U/M3U8-плейлисты, хранит каналы в SQLite, проверяет живость потоков и дает браузерный плеер с HLS, DASH, радио/аудио и настраиваемыми параметрами доступа для сложных потоков.
+
+Проект специально сделан локальным и аккуратным: без встроенного публичного реестра IPTV, без скрытого автозасева плейлистов и без обязательной внешней базы данных. Все рабочие данные создаются локально в `data/`.
+
+### Что умеет
+
+- Добавляет прямую M3U/M3U8-ссылку и парсит именно эту ссылку.
+- Принимает вставленный M3U-текст для ручных или локальных плейлистов.
+- Понимает, что пользователь добавил: плейлист, веб-страницу, одиночный поток или непонятный ответ.
+- Импортирует радио/аудио из M3U-плейлистов и прямых аудиоссылок: MP3, AAC, M4A, FLAC, WAV, OGG, Opus.
+- Сканирует только пользовательские discovery-страницы на наличие M3U/M3U8-кандидатов.
+- Хранит плейлисты, каналы, избранное, состояние плеера, фоновые задачи и диагностику в SQLite.
+- Показывает каталог с поиском и фильтрами по названию, группе, стране, городу, источнику, статусу, избранному и быстрым пресетам.
+- Воспроизводит каналы через `watch.php` с hls.js для HLS и Shaka Player для DASH/DRM-конфигов.
+- Отслеживает live/dead/unknown, HTTP-статус, последнюю ошибку проверки, рабочую ссылку и качество источников.
+- Определяет признаки защищенных потоков: DRM-маркеры, tokenized URL, auth-required ответы, geo-block и header-required потоки.
+- Позволяет в админке редактировать доступ к каналу: URL, тип потока, тип доступа, headers, DRM system, license URL и license headers.
+- Запускает тяжелые операции фоном: обновление плейлистов, проверку каналов, ремонт dead-каналов, discovery scan и поиск желаемых каналов.
+
+### Чего в проекте нет
+
+- Нет захардкоженного публичного IPTV-реестра.
+- Нет предзагруженных каналов.
+- Нет закоммиченной локальной базы, кешей, логов, загруженных плейлистов, секретов или скриншотов.
+- Нет обхода DRM. Плеер может использовать настроенный license URL и headers через локальный license proxy, но зашифрованному DRM-медиа все равно нужен действительный лицензионный поток в браузере.
+
+### Требования
+
+- PHP 8.1 или новее.
+- SQLite в PHP.
+- cURL в PHP для сетевых проверок, чтения плейлистов, proxy и фоновых задач.
+- Современный браузер для плеера.
+
+На Windows с XAMPP PHP обычно лежит здесь:
+
+```powershell
+C:\xampp\php\php.exe
+```
+
+### Локальный запуск
+
+Из корня проекта:
+
+```powershell
+php -S 127.0.0.1:8000 -t .
+```
+
+Если PHP не добавлен в `PATH`:
+
+```powershell
+C:\xampp\php\php.exe -S 127.0.0.1:8000 -t .
+```
+
+Открыть:
+
+```text
+http://127.0.0.1:8000/
+```
+
+Полезные страницы:
+
+- `index.php` - каталог каналов.
+- `watch.php` - плеер.
+- `admin.php` - добавление плейлистов, фоновые задачи, диагностика, редактор доступа и настройки.
+
+### Первый запуск
+
+1. Открой `admin.php`.
+2. Вставь прямую M3U/M3U8-ссылку в умную форму добавления.
+3. Дождись, пока форма определит тип ссылки: плейлист, одиночный поток, веб-страница или неподдерживаемый ответ.
+4. Добавь источник.
+5. Запусти проверку каналов в админке.
+6. Открой каталог или плеер.
+
+Прямое чтение M3U и web discovery разделены намеренно. Прямая ссылка на плейлист скачивается и парсится напрямую. Discovery используется только для добавленных пользователем страниц, где приложение должно искать кандидаты на плейлисты.
+
+### Админ-панель
+
+Админка разложена по рабочему процессу:
+
+- `Добавить` - умное добавление URL и вставленный M3U-текст.
+- `Активность` - состояние и логи фоновых задач.
+- `Проверка` - сводка живости и действия обслуживания.
+- `Доступ` - диагностика воспроизведения и редактор доступа по каналам.
+- `Источники` - сохраненные плейлисты, discovery-страницы, кандидаты и web-search providers.
+- `Поиск каналов` - желаемые каналы, алиасы и история поиска.
+- `Диагностика` - проблемные каналы, ошибки источников, качество каталога и история замен.
+- `Настройки` - локальные пути и PHP-окружение.
+
+### Доступ и защищенные потоки
+
+У канала могут быть метаданные доступа:
+
+- `access_type`: `open`, `tokenized`, `header_required`, `auth_required`, `geo_blocked`, `drm` или `unsupported`.
+- `access_notes`: понятная причина или заметка.
+- `stream_headers`: HTTP-заголовки для health-check, resolver, proxy и Shaka там, где браузер это позволяет.
+- `drm_system`: например `com.widevine.alpha`.
+- `license_url`: upstream DRM license endpoint, проксируемый через `api/license.php`.
+- `license_headers`: заголовки для license-запроса.
+
+Поддерживаемые типы потоков: `hls`, `dash`, `audio`, `udp`, `rtp` и обычные direct streams. Для аудио используется та же страница плеера, но с компактным радио-видом вместо пустого видеокадра.
+
+Редактор доступа принимает headers как JSON:
+
+```json
+{
+  "Referer": "https://example.com/",
+  "Origin": "https://example.com"
+}
+```
+
+или обычными строками:
+
+```text
+Referer: https://example.com/
+Origin: https://example.com
+```
+
+### Фоновые скрипты
+
+Запускать из корня проекта.
+
+Обновить все сохраненные плейлисты:
+
+```powershell
+C:\xampp\php\php.exe scripts\import_everything.php
+```
+
+Проверить живость каналов:
+
+```powershell
+C:\xampp\php\php.exe scripts\check_channels.php
+```
+
+Просканировать discovery-источники:
+
+```powershell
+C:\xampp\php\php.exe scripts\scan.php
+```
+
+Искать желаемые каналы:
+
+```powershell
+C:\xampp\php\php.exe scripts\scan_wanted.php
+```
+
+Попробовать починить dead-каналы:
+
+```powershell
+C:\xampp\php\php.exe scripts\repair_dead.php 50 0
+```
+
+Непрерывный цикл обслуживания:
+
+```powershell
+C:\xampp\php\php.exe scripts\keep_repairing.php 300 50
+```
+
+### Локальные данные
+
+Runtime-файлы лежат в `data/`:
+
+- `data/myiptv.sqlite` - локальная SQLite-база.
+- `data/uploads/` - вставленные или локальные M3U-файлы.
+- `data/jobs/` - состояние фоновых задач.
+- `data/*.json` - кеши и локальное runtime-состояние.
+- `data/*.secret` - локальные секреты.
+- `data/*.log` - логи.
+
+Эти файлы игнорируются Git. В репозитории остается только `data/.gitkeep`.
+
+Если нужны свои resolver-правила для потоков, создай:
+
+```text
+data/stream_resolvers.json
+```
+
+В качестве шаблона используй `stream_resolvers.example.json`.
+
+### Структура проекта
+
+```text
+api/                         HTTP endpoints для плеера, задач, proxy и playback config
+app/                         код приложения
+app/Database/                SQLite-схема и миграции
+app/Domain/Channels/         каталог каналов, доступ, диагностика
+app/Domain/Playlists/        хранение плейлистов
+app/Domain/Wanted/           поиск желаемых каналов
+app/Discovery/               сканирование discovery-источников
+app/Health/                  health-check и определение защищенных потоков
+app/Import/                  чтение и парсинг M3U/M3U8
+app/Jobs/                    runner фоновых задач
+app/Repair/                  поиск замен для dead-каналов
+app/Search/                  пользовательский web search
+app/Stream/                  playback resolver, HLS rewrite, license config
+assets/                      CSS и браузерный JavaScript
+data/                        локальные runtime-данные, игнорируются кроме .gitkeep
+scripts/                     CLI-скрипты обслуживания
+admin.php                    админ-панель
+index.php                    каталог
+watch.php                    плеер
+```
+
+### Проверки перед публикацией
+
+Проверка PHP-синтаксиса:
+
+```powershell
+Get-ChildItem -Recurse -Filter *.php |
+  Where-Object { $_.FullName -notlike '*\data\*' } |
+  ForEach-Object { C:\xampp\php\php.exe -l $_.FullName }
+```
+
+Проверка, что в проект не вернулся встроенный публичный реестр плейлистов:
+
+```powershell
+C:\xampp\php\php.exe scripts\assert_no_hardcoded_playlists.php
+```
+
+Ожидаемый результат:
+
+```text
+OK: no hardcoded public playlist registry entries and no playlist-backed wanted search.
+```
+
+### Git
+
+В репозиторий стоит коммитить:
+
+- PHP-файлы приложения.
+- `assets/`.
+- `api/`.
+- `scripts/`.
+- `README.md`.
+- `AGENTS.md`.
+- `.gitignore`.
+- `stream_resolvers.example.json`.
+- `data/.gitkeep`.
+
+Не коммитить:
+
+- `data/myiptv.sqlite`
+- `data/uploads/`
+- `data/jobs/`
+- `data/*.secret`
+- `data/*.json`
+- `data/*.log`
+- скриншоты и локальные кеши
+
+### Лицензия
+
+Лицензия пока не указана. Если хочешь, чтобы другие спокойно использовали код, добавь явную лицензию перед активным распространением.
+
+---
+
+## English
+
 MyIPTV is a small personal IPTV dashboard written in plain PHP. It reads user-provided M3U/M3U8 playlists, stores channels in SQLite, checks stream health, and gives a browser player with HLS, DASH, and configurable protected-stream metadata.
 
 The project is intentionally local-first: no bundled public IPTV registry, no hidden playlist seeding, and no database required beyond the SQLite file created in `data/`.
