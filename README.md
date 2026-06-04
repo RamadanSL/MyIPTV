@@ -255,7 +255,9 @@ OK: no hardcoded public playlist registry entries and no playlist-backed wanted 
 
 ### Лицензия
 
-Лицензия пока не указана. Если хочешь, чтобы другие спокойно использовали код, добавь явную лицензию перед активным распространением.
+Проект распространяется свободно по MIT License. Можно использовать, копировать, форкать, менять, распространять и встраивать как угодно. Код предоставляется как есть, без гарантий.
+
+Полный текст лицензии: `LICENSE`.
 
 ---
 
@@ -512,4 +514,6 @@ Do not commit:
 
 ## License
 
-No license is declared yet. Add one before publishing the repository publicly if you want others to reuse the code under clear terms.
+This project is freely available under the MIT License. You may use, copy, fork, modify, distribute, and integrate it however you want. The code is provided as is, without warranty.
+
+See `LICENSE` for the full license text.
